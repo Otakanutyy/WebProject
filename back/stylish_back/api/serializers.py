@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Category, Product, ProductPicture, Order, Wishlist, Comment, User
+from .models import OrderItem, Profile, Category, Product, ProductPicture,  Wishlist, Comment, User, newOrder
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,21 +16,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class UserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(required=False)
-    password = serializers.CharField(write_only=True, required=True)
-
-    class Meta:
-        model = User
-        fields = ["id", "username", "email", "password", "profile"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance:  # If instance exists, it's an update
+        if self.instance: 
             self.fields["username"].read_only = True
             self.fields["email"].read_only = True
             self.fields["password"].required = False
-        else:  # It's a create operation
+        else: 
             self.fields["username"].required = True
             self.fields["email"].required = True
 
@@ -52,7 +45,6 @@ class UserSerializer(serializers.ModelSerializer):
         # Update profile using validated profile data
         profile = instance.profile
         profile.name = profile_data.get("name", profile.name)
-        profile.bio = profile_data.get("bio", profile.bio)
         profile.save()
 
         return instance
@@ -64,9 +56,16 @@ class ProductPictureSerializer(serializers.ModelSerializer):
         fields = ['id', 'product', 'front_view', 'back_view', 'side_view']
 
 class OrderSerializer(serializers.ModelSerializer):
+    
     class Meta:
-        model = Order
-        fields = ['id', 'user', 'products']
+        model = newOrder
+        fields = ['id', 'user_id', 'date_ordered']
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'user_id', 'order_id', 'product_id']
+
 
 class WishlistSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,7 +87,6 @@ class ProductBaseSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=200)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     rating = serializers.DecimalField(max_digits=3, decimal_places=2, required=False)
-    stock = serializers.IntegerField()
     description = serializers.CharField()
     brand = serializers.CharField(max_length=100)
     discount_percentage = serializers.DecimalField(max_digits=5, decimal_places=2)
@@ -103,7 +101,6 @@ class ProductDetailSerializer(ProductBaseSerializer):
         instance.name = validated_data.get('name', instance.name)
         instance.price = validated_data.get('price', instance.price)
         instance.rating = validated_data.get('rating', instance.rating)
-        instance.stock = validated_data.get('stock', instance.stock)
         instance.brand = validated_data.get('brand', instance.brand)
         instance.category = validated_data.get('category', instance.category)
         instance.save()
@@ -111,7 +108,6 @@ class ProductDetailSerializer(ProductBaseSerializer):
 
 class ProductWriteSerializer(ProductBaseSerializer):
     description = serializers.CharField()
-    discount_percentage = serializers.DecimalField(max_digits=5, decimal_places=2)
     category_id = serializers.IntegerField()
 
     def create(self, validated_data):
@@ -121,9 +117,7 @@ class ProductWriteSerializer(ProductBaseSerializer):
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.price = validated_data.get('price', instance.price)
-        instance.discount_percentage = validated_data.get('discount_percentage', instance.discount_percentage)
         instance.rating = validated_data.get('rating', instance.rating)
-        instance.stock = validated_data.get('stock', instance.stock)
         instance.brand = validated_data.get('brand', instance.brand)
         instance.category_id = validated_data.get('category_id', instance.category_id)
         instance.save()

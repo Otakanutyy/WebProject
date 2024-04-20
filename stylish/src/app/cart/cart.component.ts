@@ -4,18 +4,20 @@ import { RouterOutlet } from '@angular/router';
 
 import { Order } from '../models';
 import { OrderService } from '../services/order.service';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [NavbarComponent, RouterOutlet, NgIf],
+  imports: [NavbarComponent, RouterOutlet, NgIf, NgFor],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
 export class CartComponent implements OnInit {
+
   logged: boolean = false;
-  order: Order | undefined;
+  orders: Order[] | undefined;
+  products: number[]=[];
 
   constructor(private orderService: OrderService){
 
@@ -31,9 +33,10 @@ export class CartComponent implements OnInit {
     }
 
     if(this.logged){
-      this.orderService.getOrders().subscribe(data=>{
-        this.order = data;
-      });
+      this.products = this.orderService.getProducts();
     }
+  }
+  buy() {
+    this.orderService.addOrder();
   }
 }

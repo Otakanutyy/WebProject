@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Order } from '../models';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,9 +12,23 @@ export class OrderService {
 
   constructor(private http: HttpClient) { }
 
+  products: number[] = [];
+
+  addProduct(id: number){
+    this.products.push(id);
+  }
+
+  getProducts():number[]{
+      return this.products;
+  }
+
   // Add an order
-  addOrder(userId: number, productId: number): Observable<Order> {
-    return this.http.post<Order>(`${this.apiUrl}/${userId}/add/${productId}/`, {});
+  addOrder(): Observable<Order> {
+    //create order pass to orderlist
+    return this.http.post<Order>(
+      `${this.apiUrl}`,
+      {products: this.products}
+    )
   }
 
   // Remove an order
@@ -27,8 +42,8 @@ export class OrderService {
   // }
 
   // Get all orders
-  getOrders(): Observable<Order> {
-    return this.http.get<Order>(this.apiUrl);
+  getOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(this.apiUrl);
   }
 
   // Get a specific order by order ID

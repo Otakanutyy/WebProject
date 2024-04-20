@@ -16,9 +16,7 @@ export interface Product {
     name: string;
     description: string;
     price: number;
-    discount_percentage: number;
     rating: number | null;
-    stock: number;
     brand: string;
     category: Category;
 }

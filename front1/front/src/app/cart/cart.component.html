@@ -1,0 +1,17 @@
+<div *ngIf="!logged">
+    Please login first!
+</div>
+
+<!-- <div *ngIf="logged" class="box"> -->
+    <div *ngFor="let product of products">
+        <p>{{product.id}}</p>
+        <p>{{product.name}}</p>
+        <p>{{product.description}}</p>
+    </div> 
+<!-- </div> -->
+
+<div *ngIf="products.length!=0">
+    <button (click)="buy()">
+        Buy Products
+    </button>
+</div>

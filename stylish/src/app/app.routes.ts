@@ -11,8 +11,6 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { ProfileComponent } from './profile/profile.component';
 
-import { title } from 'process';
-import { profile } from 'console';
 
 export const routes: Routes = [
     

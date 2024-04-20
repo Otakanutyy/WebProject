@@ -1,8 +1,11 @@
-<div *ngIf="order">
-    <h1>{{order.id}}</h1>
-    <h1>{{order.products}}</h1>
-    <h1>{{order.user}}</h1>
+<div *ngFor="let product of products">
+    <h1>{{product}}</h1>
 </div>
 
+<div *ngIf="products">
+    <button (click)="buy()">
+        Make Order
+    </button>
+</div>
 
 <router-outlet></router-outlet>

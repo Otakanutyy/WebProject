@@ -6,8 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from '../services/user.service';
 
 import { NgIf } from '@angular/common';
-import { log } from 'console';
 import { Token } from '../models';
+
+import { OrderService } from '../services/order.service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit{
   constructor(private http: HttpClient,
               private user: UserService,
               private router: Router,
+              private order: OrderService,
   ){
 
   }
@@ -44,6 +46,7 @@ export class LoginComponent implements OnInit{
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
       window.location.reload()
+      this.order.addOrder();
     })
   }
 }

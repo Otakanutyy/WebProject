@@ -6,14 +6,14 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 
 from django.shortcuts import get_object_or_404
-from .models import Profile, Category, Product, ProductPicture, Order, Wishlist, Comment, User
+from .models import Profile, Category, Product, ProductPicture, newOrder, Wishlist, Comment, User, OrderItem
 from .serializers import ( CategorySerializer, ProductBaseSerializer,
                           ProductDetailSerializer, ProductWriteSerializer,
-                          ProductPictureSerializer, OrderSerializer, WishlistSerializer,
-                          CommentSerializer, ProfileSerializer, UserSerializer)
+                          ProductPictureSerializer, OrderSerializer,  WishlistSerializer,
+                          CommentSerializer, ProfileSerializer, OrderItemSerializer)
 
 from rest_framework.exceptions import AuthenticationFailed
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -57,18 +57,29 @@ class ProductPictureRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
     serializer_class = ProductPictureSerializer
 
 class OrderListCreateView(generics.ListCreateAPIView):
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user)
+        return newOrder.objects.filter(user=self.request.user)
         
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
 
+class OrderItemListCeateView(generics.ListCreateAPIView):
+    serializer_class = OrderItemSerializer
+    permission_classes = (IsAuthenticated)
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+    
+class OrderItemRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+    permission_classes = (IsAuthenticated)
+
 class OrderRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Order.objects.all()
+    queryset = newOrder.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated)
 
@@ -116,12 +127,6 @@ def wishlist_by_user_id(request, user_id):
         return Response(serializer.data)
     except Wishlist.DoesNotExist:
         return Response({"message": "Wishlist not found for the given user ID."}, status=404)
-    
-@api_view(['GET'])
-def orders_by_user_id(request, user_id):
-    orders = Order.objects.filter(user_id=user_id)
-    serializer = OrderSerializer(orders, many=True)
-    return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -156,43 +161,12 @@ def remove_from_wishlist(request, user_id, product_id):
     except Product.DoesNotExist:
         return Response({"message": "Product not found."}, status=404)
     
-# @api_view(['POST'])
-# def add_comment_to_product(request, product_id):
-#     try:
-#         product = get_object_or_404(Product, id=product_id)
-#         user_id = request.data.get('user_id')
-#         user = get_object_or_404(User, id=user_id)
-#         comment_text = request.data.get('text')
-#         comment = Comment.objects.create(product=product, user=user, text=comment_text)
-#         serializer = CommentSerializer(comment)
-#         return Response(serializer.data, status=201)
-#     except Product.DoesNotExist:
-#         return Response({"message": "Product not found."}, status=404)
-#     except User.DoesNotExist:
-#         return Response({"message": "User not found."}, status=404)
-    
-# @api_view(['POST'])
-# def add_order(request, user_id, product_id):
-#     try:
-#         user = get_object_or_404(User, id=user_id)
-#         product = get_object_or_404(Product, id=product_id)
-#         order = Order.objects.create(user=user)
-#         order.products.add(product)
-#         serializer = OrderSerializer(order)
-#         return Response(serializer.data, status=201)
-#     except User.DoesNotExist:
-#         return Response({"message": "User not found."}, status=404)
-#     except Product.DoesNotExist:
-#         return Response({"message": "Product not found."}, status=404)
+@api_view(['POST'])
+def orderItems_byOrderId(request, order_id):
+    orderItems = OrderItem.objects.filter(order_id=order_id)
+    serializer = OrderItemSerializer(orderItems, many=True)
+    return Response(serializer.data)
 
-@api_view(['DELETE'])
-def remove_order(request, user_id, order_id):
-    try:
-        order = get_object_or_404(Order, id=order_id, user_id=user_id)
-        order.delete()
-        return Response({"message": "Order removed successfully."}, status=204)
-    except Order.DoesNotExist:
-        return Response({"message": "Order not found."}, status=404)
 
 @api_view(['GET'])
 def product_pictures_by_product_id(request, product_id):
@@ -213,6 +187,8 @@ class UserList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class UserDetail(APIView):

@@ -15,7 +15,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgFor, NgIf } from '@angular/common';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { FormsModule } from '@angular/forms';
-import { error } from 'console';
 
 import { UserService } from '../services/user.service';
 
@@ -36,6 +35,7 @@ export class ProductListComponent implements OnInit{
 
     logged:Boolean = false;
     private newOrder : OrderService|undefined;
+    isAdded: boolean = false;
 
     constructor(private prodService: ProductService,
       private categoryService: CategoryService,
@@ -150,11 +150,7 @@ export class ProductListComponent implements OnInit{
       );
     }
 
-    addToCart(id: number){
-      // this.newOrder = {
-      //   "user" = "",
-      //   "products" =""
-      // }
-      this.order.addOrder(1, id);
+    updateOrder(prodId: number){
+      this.order.addProduct(prodId);
     }
 }
