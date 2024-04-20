@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import OrderItem, Profile, Category, Product, ProductPicture,  Wishlist, Comment, User, newOrder
+from .models import Profile, Category, Product, ProductPicture, Order, Wishlist, Comment, User
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,14 +58,14 @@ class ProductPictureSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = newOrder
-        fields = ['id', 'user_id', 'date_ordered']
+        model = Order
+        fields = ['id', 'user', 'products']
 
-class OrderItemSerializer(serializers.ModelSerializer):
+class OrderSerializer2(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(read_only=True)
     class Meta:
-        model = OrderItem
-        fields = ['id', 'user_id', 'order_id', 'product_id']
-
+        model = Order
+        fields = ['id', 'user_id', 'products']
 
 class WishlistSerializer(serializers.ModelSerializer):
     class Meta:
@@ -90,7 +90,6 @@ class ProductBaseSerializer(serializers.Serializer):
     description = serializers.CharField()
     brand = serializers.CharField(max_length=100)
     discount_percentage = serializers.DecimalField(max_digits=5, decimal_places=2)
-
 class ProductDetailSerializer(ProductBaseSerializer):
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
 

@@ -6,11 +6,11 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 
 from django.shortcuts import get_object_or_404
-from .models import Profile, Category, Product, ProductPicture, newOrder, Wishlist, Comment, User, OrderItem
+from .models import Profile, Category, Product, ProductPicture, Order, Wishlist, Comment, User
 from .serializers import ( CategorySerializer, ProductBaseSerializer,
                           ProductDetailSerializer, ProductWriteSerializer,
-                          ProductPictureSerializer, OrderSerializer,  WishlistSerializer,
-                          CommentSerializer, ProfileSerializer, OrderItemSerializer)
+                          ProductPictureSerializer, OrderSerializer, OrderSerializer2, WishlistSerializer,
+                          CommentSerializer, ProfileSerializer)
 
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -57,29 +57,17 @@ class ProductPictureRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
     serializer_class = ProductPictureSerializer
 
 class OrderListCreateView(generics.ListCreateAPIView):
-    serializer_class = OrderSerializer
+    serializer_class = OrderSerializer2
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return newOrder.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user)
         
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
 
-class OrderItemListCeateView(generics.ListCreateAPIView):
-    serializer_class = OrderItemSerializer
-    permission_classes = (IsAuthenticated)
-
-    def perform_create(self, serializer):
-        return serializer.save(user=self.request.user)
-    
-class OrderItemRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = OrderItem.objects.all()
-    serializer_class = OrderItemSerializer
-    permission_classes = (IsAuthenticated)
-
 class OrderRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = newOrder.objects.all()
+    queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated)
 
@@ -161,12 +149,16 @@ def remove_from_wishlist(request, user_id, product_id):
     except Product.DoesNotExist:
         return Response({"message": "Product not found."}, status=404)
     
-@api_view(['POST'])
-def orderItems_byOrderId(request, order_id):
-    orderItems = OrderItem.objects.filter(order_id=order_id)
-    serializer = OrderItemSerializer(orderItems, many=True)
-    return Response(serializer.data)
 
+
+@api_view(['DELETE'])
+def remove_order(request, user_id, order_id):
+    try:
+        order = get_object_or_404(Order, id=order_id, user_id=user_id)
+        order.delete()
+        return Response({"message": "Order removed successfully."}, status=204)
+    except Order.DoesNotExist:
+        return Response({"message": "Order not found."}, status=404)
 
 @api_view(['GET'])
 def product_pictures_by_product_id(request, product_id):
@@ -187,8 +179,6 @@ class UserList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 class UserDetail(APIView):

@@ -1,7 +1,7 @@
 import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../services/order.service';
-import { Product } from '../models';
+import { Order, Product } from '../models';
 import { ProductService } from '../services/product.service';
 import { ProductPicture } from '../models';
 
@@ -17,6 +17,7 @@ export class CartComponent implements OnInit{
   cart: number[] = [];
   products: Product[] = [];
   productsPictures: ProductPicture[] = [];
+  order: Order|undefined;
 
   constructor(private orderService: OrderService,
               private productService: ProductService
@@ -50,8 +51,9 @@ export class CartComponent implements OnInit{
   }
 
   buy(){
-    this.orderService.addOrder().subscribe(
-    )
+    this.orderService.addOrder().subscribe(data=>{
+      this.order = data;
+    })
     this.orderService.clearCart();
     this.cart = [];
   }

@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { newOrder } from '../models';
-import { OrderItem } from '../models';
+import { Order } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://127.0.0.1:8000/api/orders';
+  private apiUrl = 'http://127.0.0.1:8000/api/orders/';
   cart: number[]=[];
-  orderId: number|undefined;
 
   constructor(private http: HttpClient) { }
 
@@ -18,8 +16,8 @@ export class OrderService {
     this.cart.push(productId);
   }
 
-  addOrder(): Observable<newOrder> {
-      return this.http.post<newOrder>(this.apiUrl, {}).pipe(
+  addOrder(): Observable<Order> {
+      return this.http.post<Order>(this.apiUrl, { products: this.cart }).pipe(
         catchError(error => {
           return throwError('Failed to add order');
         })

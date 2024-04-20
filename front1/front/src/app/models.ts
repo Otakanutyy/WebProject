@@ -35,17 +35,12 @@ export interface ProductPicture {
     back_view: string | null;
     side_view: string | null;
 }
-
-export interface newOrder{
-    user_id: number;
-    date_ordered: Date;
-}
-
-export interface OrderItem {
+  
+export interface Order {
     id: number;
     user_id: number;
-    product_id: number;
-    order_id: number;
+    products: Product[];
+    total_price: number;
 }
 
 export interface Wishlist {
@@ -56,7 +51,7 @@ export interface Wishlist {
 export interface Comment {
     id: number;
     user_id: number;
-    product_id: number;
+    product: Product;
     text: string;
     created_at: string;
 }

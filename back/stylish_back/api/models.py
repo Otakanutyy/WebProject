@@ -62,21 +62,17 @@ class ProductPicture(models.Model):
         verbose_name = ("ProductPictures")
         verbose_name_plural = ("ProductsPictures")
 
-class newOrder(models.Model):
+class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_ordered = models.DateTimeField(auto_now_add=True)
+    products = models.ManyToManyField(Product)
+    closed = models.BooleanField(default=False)
+    # @property
+    # def total_price(self):
+    #     return sum(product.price for product in self.products.all())
 
     def __str__(self):
-        return f"Order of:{self.user.username}, Date:{self.date_ordered}"
+        return f"ID:{self.id}, User:{self.user.username}, Products:{self.products}"
 
-
-class OrderItem(models.Model):
-    order = models.ForeignKey(newOrder, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"OrderItem of:{self.order}, Product:{self.product}, Buyer:{self.user}"
 
 
 class Wishlist(models.Model):
