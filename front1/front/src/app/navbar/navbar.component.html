@@ -19,14 +19,20 @@
       </div>
       
       <div class="nav-item dropdown col-md-3 text-end" *ngIf="logged">
-        <select class="form-select mb-3">
-          <option value=""><a routerLink="">Profile</a></option>
-          <option value="">Wishlist</option>
-          <option value="">Cart</option>
-          <!-- <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option> -->
-        </select>
+        <a class="nav-link dropdown-toggle" (click)="toggleDropdown()" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Dropdown link
+        </a>
+        <ul class="dropdown-menu" [ngClass]="{'show': isOpen}" aria-labelledby="navbarDropdownMenuLink">
+          <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
+          <li><a class="dropdown-item" routerLink="/myproducts">MyProducts</a></li>
+          <li><a class="dropdown-item" routerLink="/sell">Sell</a></li>
+          <li><a class="dropdown-item" routerLink="/myorders">MyOrders</a></li>
+        </ul>
 
-        <button (click)="logout()">
+        
+      </div>
+
+      <div class="nav-item dropdown col-md-3 text-end" *ngIf="logged"><button (click)="logout()">
           logout
         </button>
       </div>

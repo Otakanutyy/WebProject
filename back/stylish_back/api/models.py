@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator
 from django.contrib.auth.models import User
 
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, default="user")
@@ -31,7 +32,9 @@ class Product(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2, null=True)
     brand = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, validators=[MaxValueValidator(100)])
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, validators=[MaxValueValidator(100)], null=True)
+    is_verified = models.BooleanField(default=False)
+    owner_id = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return (
             f"ID: {self.id}, Name: {self.name}, Description: {self.description}, "
@@ -66,9 +69,6 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     products = models.ManyToManyField(Product)
     closed = models.BooleanField(default=False)
-    # @property
-    # def total_price(self):
-    #     return sum(product.price for product in self.products.all())
 
     def __str__(self):
         return f"ID:{self.id}, User:{self.user.username}, Products:{self.products}"

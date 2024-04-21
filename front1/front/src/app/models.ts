@@ -25,7 +25,8 @@ export interface Product {
     rating: number | null;
     brand: string;
     category_id: number;
-    discount_percentage: number;
+    discount_percentage: number|null;
+    owner_id: number;
 }
   
 export interface ProductPicture {
@@ -35,7 +36,7 @@ export interface ProductPicture {
     back_view: string | null;
     side_view: string | null;
 }
-  
+
 export interface Order {
     id: number;
     user_id: number;

@@ -67,6 +67,13 @@ class OrderSerializer2(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'user_id', 'products']
 
+class ProductSerializer2(serializers.ModelSerializer):
+    # category = serializers.IntegerField(read_only=True)
+    class Meta:
+        model = Product
+        fields = ['id', 'owner_id', 'name', 'description', 'price', 
+                  'brand', 'category', 'discount_percentage']
+        
 class WishlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wishlist
@@ -82,6 +89,14 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name', 'description']
 
+
+class ProductSerializer222(serializers.ModelSerializer):
+    # category = serializers.IntegerField(read_only=True)
+    class Meta:
+        model = Product
+        fields = ['id', 'owner_id', 'name', 'description', 'price', 
+                  'brand', 'category', 'discount_percentage']
+
 class ProductBaseSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=200)
@@ -89,7 +104,11 @@ class ProductBaseSerializer(serializers.Serializer):
     rating = serializers.DecimalField(max_digits=3, decimal_places=2, required=False)
     description = serializers.CharField()
     brand = serializers.CharField(max_length=100)
-    discount_percentage = serializers.DecimalField(max_digits=5, decimal_places=2)
+    discount_percentage = serializers.DecimalField(max_digits=5, decimal_places=2, required=False)
+    is_verified = serializers.BooleanField(required=False)  # Corrected spelling
+    owner_id = serializers.IntegerField(read_only=True)
+    category_id = serializers.IntegerField()
+
 class ProductDetailSerializer(ProductBaseSerializer):
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
 
@@ -102,13 +121,11 @@ class ProductDetailSerializer(ProductBaseSerializer):
         instance.rating = validated_data.get('rating', instance.rating)
         instance.brand = validated_data.get('brand', instance.brand)
         instance.category = validated_data.get('category', instance.category)
+        instance.owner_id = validated_data.get('owner_id', instance.owner_id)  # Corrected assignment
         instance.save()
         return instance
 
 class ProductWriteSerializer(ProductBaseSerializer):
-    description = serializers.CharField()
-    category_id = serializers.IntegerField()
-
     def create(self, validated_data):
         return Product.objects.create(**validated_data)
 
@@ -119,6 +136,7 @@ class ProductWriteSerializer(ProductBaseSerializer):
         instance.rating = validated_data.get('rating', instance.rating)
         instance.brand = validated_data.get('brand', instance.brand)
         instance.category_id = validated_data.get('category_id', instance.category_id)
+        instance.owner_id = validated_data.get('owner_id', instance.owner_id)  # Corrected assignment
         instance.save()
         return instance
 

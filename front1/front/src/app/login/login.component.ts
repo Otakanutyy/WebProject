@@ -7,13 +7,14 @@ import { UserService } from '../services/user.service';
 
 import { NgIf } from '@angular/common';
 import { Token } from '../models';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [RouterOutlet, RouterModule, FormsModule, NgIf],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    standalone: true,
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css',
+    imports: [RouterOutlet, RouterModule, FormsModule, NgIf, NavbarComponent]
 })
 export class LoginComponent implements OnInit{
   logged: boolean = false;

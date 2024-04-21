@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     ProfileListCreateView, ProfileRetrieveUpdateDestroyView,
     CategoryListCreateView, CategoryRetrieveUpdateDestroyView,
-    ProductListCreateView, ProductRetrieveUpdateDestroyView,
+    ProductList,ProductCreateView,ProductRetrieveUpdateDestroyView,
     ProductPictureListCreateView, ProductPictureRetrieveUpdateDestroyView,
     OrderListCreateView, OrderRetrieveUpdateDestroyView,
     WishlistListCreateView, WishlistRetrieveUpdateDestroyView,
@@ -28,7 +28,8 @@ urlpatterns = [
     path('categories/<int:pk>/', CategoryRetrieveUpdateDestroyView.as_view(), name='category-detail'),
 
     # Product URLs
-    path('products/', ProductListCreateView.as_view(), name='product-list'),
+    path('products/', ProductList.as_view(), name='product-list'),
+    path('products/create/', ProductCreateView.as_view(), name='product-create'),
     path('products/<int:pk>/', ProductRetrieveUpdateDestroyView.as_view(), name='product-detail'),
 
     # ProductPicture URLs

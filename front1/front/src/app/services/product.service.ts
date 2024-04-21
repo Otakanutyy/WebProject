@@ -18,6 +18,11 @@ export class ProductService {
     return this.http.get<Product[]>(`${this.apiUrl}/products/`);
   }
 
+  addProduct(name:string, description:string, price:number, brand:string, category:number): Observable<Product>{
+    return this.http.post<Product>(`${this.apiUrl}/products/create/`, {name, description, price, brand, category});
+  }
+
+
   getProduct(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/products/${id}/`);
   }
@@ -52,5 +57,12 @@ export class ProductService {
     return this.http.get<ProductPicture>(`${this.apiUrl}/product-pictures/${productId}/`);
   }
 
+  addProducPicture(product:number, front_view: File, back_view: File, side_view: File): Observable<ProductPicture>{
+    return this.http.post<ProductPicture>(`${this.apiUrl}/product-pictures/`, {product, front_view, back_view, side_view});
+  }
+
+  getTopRatedProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products/top-rated/`);
+  }
 
 }

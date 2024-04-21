@@ -1,0 +1,15 @@
+<app-navbar></app-navbar>
+<div>
+  <form (ngSubmit)="onSubmit()">
+      <input type="text" placeholder="Name" [(ngModel)]="this.name" name="name" required>
+      <input type="text" placeholder="Description" [(ngModel)]="this.description" name="description" required>
+      <input type="text" placeholder="Brand" [(ngModel)]="this.brand" name="brand" required>
+      <input type="number" placeholder="Category" [(ngModel)]="this.category" name="category" required>
+      <input type="number" placeholder="Price" [(ngModel)]="this.price" name="price" required>
+      
+      <input type="file" placeholder="FrontImage" (change)="onImageCange($event)">
+      <input type="file" placeholder="BackImage" (change)="onImageCange($event)">
+      <input type="file" placeholder="SideImage" (change)="onImageCange($event)">
+      <button type="submit">Submit</button>
+  </form>
+</div>

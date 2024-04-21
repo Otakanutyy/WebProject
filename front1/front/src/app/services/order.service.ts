@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, retry, throwError } from 'rxjs';
 import { Order } from '../models';
 
 @Injectable({
@@ -30,5 +30,9 @@ export class OrderService {
 
   clearCart(){
     this.cart = [];
+  }
+
+  getOrders():Observable<Order[]>{
+    return this.http.get<Order[]>(this.apiUrl);
   }
 }

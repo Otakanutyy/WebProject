@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .models import Profile, Category, Product, ProductPicture, Order, Wishlist, Comment, User
 from .serializers import ( CategorySerializer, ProductBaseSerializer,
-                          ProductDetailSerializer, ProductWriteSerializer,
+                          ProductDetailSerializer, ProductSerializer2, ProductSerializer222, ProductWriteSerializer,
                           ProductPictureSerializer, OrderSerializer, OrderSerializer2, WishlistSerializer,
                           CommentSerializer, ProfileSerializer)
 
@@ -34,10 +34,6 @@ class CategoryRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-class ProductListCreateView(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductWriteSerializer
-
 
 class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
@@ -55,6 +51,21 @@ class ProductPictureListCreateView(generics.ListCreateAPIView):
 class ProductPictureRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ProductPicture.objects.all()
     serializer_class = ProductPictureSerializer
+
+
+class ProductList(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer222
+
+class ProductCreateView(generics.CreateAPIView):
+    serializer_class = ProductSerializer2
+    permission_classes = (IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        # Fetch the user instance
+        user = self.request.user
+        # Assign the user instance to the owner_id field
+        serializer.save(owner_id=user)
 
 class OrderListCreateView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer2

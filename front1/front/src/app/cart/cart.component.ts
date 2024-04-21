@@ -4,13 +4,14 @@ import { OrderService } from '../services/order.service';
 import { Order, Product } from '../models';
 import { ProductService } from '../services/product.service';
 import { ProductPicture } from '../models';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
-  selector: 'app-cart',
-  standalone: true,
-  imports: [NgIf, NgFor],
-  templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css'
+    selector: 'app-cart',
+    standalone: true,
+    templateUrl: './cart.component.html',
+    styleUrl: './cart.component.css',
+    imports: [NgIf, NgFor, NavbarComponent]
 })
 export class CartComponent implements OnInit{
   logged: boolean = false;

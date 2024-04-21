@@ -5,13 +5,14 @@ import { ProductService } from '../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
-  selector: 'app-productlist',
-  standalone: true,
-  imports: [FormsModule, NgFor, NgIf, RouterModule, RouterOutlet],
-  templateUrl: './productlist.component.html',
-  styleUrl: './productlist.component.css'
+    selector: 'app-productlist',
+    standalone: true,
+    templateUrl: './productlist.component.html',
+    styleUrl: './productlist.component.css',
+    imports: [FormsModule, NgFor, NgIf, RouterModule, RouterOutlet, NavbarComponent]
 })
 export class ProductlistComponent {
   products: Product[] = [];
