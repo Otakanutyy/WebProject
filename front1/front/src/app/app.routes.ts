@@ -11,6 +11,9 @@ import { SellComponent } from './sell/sell.component';
 import { MyordersComponent } from './myorders/myorders.component';
 import { MyproductsComponent } from './myproducts/myproducts.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ProductManagerComponent } from './product-manager/product-manager.component';
+import { LoginManagerComponent } from './login-manager/login-manager.component';
+import { WishlistComponent } from './wishlist/wishlist.component';
 
 export const routes: Routes = [
     {path: 'productList', component: ProductlistComponent, data: { title: 'Products List Page' },},
@@ -25,4 +28,7 @@ export const routes: Routes = [
     { path: 'myproducts', component: MyproductsComponent, data:{title: 'cart Page'}},
     { path: 'sell', component: SellComponent, data:{title: 'cart Page'}},
     { path: 'profile', component: ProfileComponent, data:{title: 'cart Page'}},
+    { path: 'login/loginManager', component: LoginManagerComponent, data:{title: 'cart Page'}},
+    { path: 'mywishlist', component: WishlistComponent, data:{title: 'cart Page'}},
+    { path: 'productManager', component: ProductManagerComponent, data:{title: 'cart Page'}},
 ];

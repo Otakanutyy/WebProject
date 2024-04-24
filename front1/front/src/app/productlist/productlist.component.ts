@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from "../navbar/navbar.component";
+import { WishlistService } from '../services/wishlist.service';
 
 @Component({
     selector: 'app-productlist',
@@ -25,7 +26,7 @@ export class ProductlistComponent {
     private newOrder : OrderService|undefined;
 
     constructor(private prodService: ProductService,
-                private order: OrderService
+                private order: OrderService, private wishlisService: WishlistService 
     ){
     }
 
@@ -38,8 +39,10 @@ export class ProductlistComponent {
       if (this.selectedCategoryId) {
         this.prodService.getProductsByCategory(this.selectedCategoryId).subscribe(
           (data: Product[]) => {
-            this.products = data;
-            this.loadProductPictures();
+            this.products = data.filter(product => product.is_verified);
+            if(this.products.length!=0){
+                this.loadProductPictures();
+            }
           },
           (error) => {
             console.error('Error fetching products:', error);
@@ -48,8 +51,10 @@ export class ProductlistComponent {
       } else {
         this.prodService.getProducts().subscribe(
           (data: Product[]) => {
-            this.products = data;
-            this.loadProductPictures();
+            this.products = data.filter(product => product.is_verified);
+            if(this.products.length!=0){
+                this.loadProductPictures();
+            }
           },
           (error) => {
             console.error('Error fetching products:', error);
@@ -91,51 +96,14 @@ export class ProductlistComponent {
       this.selectedCategoryId = categoryId ? +categoryId : null;
       this.refresh();
     }
-  
-  
-    // Add Product Function
-    addProduct(product: Product): void {
-      this.prodService.createProduct(product).subscribe(
-        (data: Product) => {
-          console.log('Product added successfully:', data);
-          // Optionally, you can refresh the product list after adding
-          this.refresh();
-        },
-        (error) => {
-          console.error('Error adding product:', error);
-        }
-      );
-    }
-  
-    // Update Product Function
-    updateProduct(id: number, product: Product): void {
-      this.prodService.updateProduct(id, product).subscribe(
-        (data: Product) => {
-          console.log('Product updated successfully:', data);
-          // Optionally, you can refresh the product list after updating
-          this.refresh();
-        },
-        (error) => {
-          console.error('Error updating product:', error);
-        }
-      );
-    }
-  
-    // Delete Product Function
-    deleteProduct(id: number): void {
-      this.prodService.deleteProduct(id).subscribe(
-        () => {
-          console.log('Product deleted successfully');
-          // Optionally, you can refresh the product list after deleting
-          this.refresh();
-        },
-        (error) => {
-          console.error('Error deleting product:', error);
-        }
-      );
-    }
 
     addToCart(id: number){
       this.order.addtoCart(id);
+    }
+
+    addtoWishlist(id:number){
+      this.wishlisService.addToWishlist(id).subscribe({
+        
+      })
     }
 }

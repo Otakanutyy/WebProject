@@ -1,0 +1,24 @@
+<app-navbar></app-navbar>
+
+
+<h1>categories:</h1>
+<div *ngFor="let category of categories">
+    <h2>{{category.name}}</h2>
+    <h2>{{category.description}}</h2>
+    <br>
+</div>
+    <form (ngSubmit)="onSubmit()">
+        <input type="text" placeholder="Name" [(ngModel)]="this.name" name="name" required>
+      <input type="text" placeholder="Description" [(ngModel)]="this.description" name="description" required>
+      <button type="submit">add category</button>
+    </form>
+<br>
+<br>
+
+<div *ngFor="let product of products">
+    <h1>{{product.name}}</h1>
+    <p>{{product.price}}</p>
+    <p>{{product.description}}</p>
+    <h2>{{product.is_verified}} <button (click)="updateProduct(product.id,product)">Verify</button></h2>
+    <h2><button (click)="deleteProduct(product.id)">delete</button></h2>
+</div>

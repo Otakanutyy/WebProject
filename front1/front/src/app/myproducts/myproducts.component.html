@@ -1,2 +1,26 @@
 <app-navbar></app-navbar>
 <p>myproducts works!</p>
+
+<div *ngIf="products.length!=0">
+        <form (ngSubmit)="onSubmit()">
+            <input type="number" placeholder="id" [(ngModel)]="this.id" name="id" required>
+            <input type="text" placeholder="Name" [(ngModel)]="this.name" name="name" required>
+            <input type="text" placeholder="Description" [(ngModel)]="this.description" name="description" required>
+            <input type="text" placeholder="Brand" [(ngModel)]="this.brand" name="brand" required>
+            <input type="number" placeholder="Price" [(ngModel)]="this.price" name="price" required>
+            <button type="submit">Submit</button>
+        </form>
+</div>
+
+<div *ngFor="let product of products">
+    <h1>name: {{product.name}}</h1>
+    <h2>desc: {{product.description}}</h2>
+    <h2>id: {{product.id}}</h2>
+    <h2>owner_id:{{product.owner_id}}</h2>
+    <h2>brand:{{product.brand}}</h2>
+    <h2>price:{{product.price}}</h2>
+    <h2>verified:{{product.is_verified}}</h2>
+    <button (click)="deleteProd(product.id)">delete</button>
+    <br>
+    <br>
+</div>

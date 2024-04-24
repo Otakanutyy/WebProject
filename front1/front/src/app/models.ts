@@ -27,6 +27,7 @@ export interface Product {
     category_id: number;
     discount_percentage: number|null;
     owner_id: number;
+    is_verified: boolean;
 }
   
 export interface ProductPicture {

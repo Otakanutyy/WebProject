@@ -9,6 +9,8 @@ import { NgIf } from '@angular/common';
 import { Token } from '../models';
 import { NavbarComponent } from "../navbar/navbar.component";
 
+import { WishlistService } from '../services/wishlist.service';
+
 @Component({
     selector: 'app-login',
     standalone: true,
@@ -43,7 +45,7 @@ export class LoginComponent implements OnInit{
       console.log(data);
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
-      window.location.reload()
+      window.location.reload();
     })
   }
 }

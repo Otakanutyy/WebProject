@@ -27,8 +27,9 @@
           <li><a class="dropdown-item" routerLink="/myproducts">MyProducts</a></li>
           <li><a class="dropdown-item" routerLink="/sell">Sell</a></li>
           <li><a class="dropdown-item" routerLink="/myorders">MyOrders</a></li>
+          <li><a class="dropdown-item" routerLink="/mywishlist">MyWishlist</a></li>
+          <li *ngIf="manager=='yes'"><a class="dropdown-item" routerLink="/productManager">ProductManager</a></li>
         </ul>
-
         
       </div>
 

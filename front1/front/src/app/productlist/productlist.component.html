@@ -29,10 +29,14 @@
               </div>
   
               <div class="d-flex flex-row">
-                <a [routerLink]="['/productList', product.id]" class="btn btn-primary flex-fill me-1" data-mdb-ripple-init data-mdb-ripple-color="dark" routerLink="">Learn more</a>
+                <a [routerLink]="['/productList', product.id]" class="btn btn-primary flex-fill me-1" 
+                data-mdb-ripple-init data-mdb-ripple-color="dark" routerLink="">Learn more</a>
                 
                 <button class="btn btn-danger flex-fill ms-1" data-mdb-ripple-init data-mdb-ripple-color="dark" 
                 (click)="addToCart(product.id)">Add to Cart</button>
+
+                <button class="btn btn-danger flex-fill ms-1" data-mdb-ripple-init data-mdb-ripple-color="dark" 
+                (click)="addtoWishlist(product.id)">Add to wishlist</button>
               </div>
             </div>
           </div>

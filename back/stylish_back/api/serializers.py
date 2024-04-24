@@ -72,8 +72,14 @@ class ProductSerializer2(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'owner_id', 'name', 'description', 'price', 
-                  'brand', 'category', 'discount_percentage']
+                  'brand', 'category_id', 'discount_percentage']
         
+class ProductSerializer222(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'owner_id', 'rating','name', 'description', 'price', 
+                  'brand', 'category_id', 'discount_percentage', 'is_verified']
+
 class WishlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wishlist
@@ -84,59 +90,47 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'user', 'product', 'text', 'created_at']
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['id', 'name', 'description']
+# class CategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Category
+#         fields = ['id', 'name', 'description']
 
-
-class ProductSerializer222(serializers.ModelSerializer):
-    # category = serializers.IntegerField(read_only=True)
-    class Meta:
-        model = Product
-        fields = ['id', 'owner_id', 'name', 'description', 'price', 
-                  'brand', 'category', 'discount_percentage']
-
-class ProductBaseSerializer(serializers.Serializer):
+class CategorySerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(max_length=200)
-    price = serializers.DecimalField(max_digits=10, decimal_places=2)
-    rating = serializers.DecimalField(max_digits=3, decimal_places=2, required=False)
+    name = serializers.CharField(max_length=100)
     description = serializers.CharField()
-    brand = serializers.CharField(max_length=100)
-    discount_percentage = serializers.DecimalField(max_digits=5, decimal_places=2, required=False)
-    is_verified = serializers.BooleanField(required=False)  # Corrected spelling
-    owner_id = serializers.IntegerField(read_only=True)
-    category_id = serializers.IntegerField()
-
-class ProductDetailSerializer(ProductBaseSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
 
     def create(self, validated_data):
-        return Product.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.price = validated_data.get('price', instance.price)
-        instance.rating = validated_data.get('rating', instance.rating)
-        instance.brand = validated_data.get('brand', instance.brand)
-        instance.category = validated_data.get('category', instance.category)
-        instance.owner_id = validated_data.get('owner_id', instance.owner_id)  # Corrected assignment
-        instance.save()
-        return instance
-
-class ProductWriteSerializer(ProductBaseSerializer):
-    def create(self, validated_data):
-        return Product.objects.create(**validated_data)
+        return Category.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
-        instance.price = validated_data.get('price', instance.price)
-        instance.rating = validated_data.get('rating', instance.rating)
-        instance.brand = validated_data.get('brand', instance.brand)
-        instance.category_id = validated_data.get('category_id', instance.category_id)
-        instance.owner_id = validated_data.get('owner_id', instance.owner_id)  # Corrected assignment
         instance.save()
         return instance
 
+
+class WishlistSerializer(serializers.Serializer):
+    user_id = serializers.PrimaryKeyRelatedField(read_only=True)
+    products = ProductSerializer222(many=True)
+
+    def create(self, validated_data):
+        user = validated_data['user']
+        product_data = validated_data['products']
+        wishlist = Wishlist.objects.create(user=user)
+        for product_item in product_data:
+            Product.objects.create(wishlist=wishlist, **product_item)
+        return wishlist
+
+    def update(self, instance, validated_data):
+        instance.products.clear()
+        product_data = validated_data.get('products')
+        for product_item in product_data:
+            Product.objects.create(wishlist=instance, **product_item)
+        return instance
+    
+class Wishlist2(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(read_only=True)
+    class Meta:
+        model = Wishlist
+        fields = ['user_id', 'products']

@@ -16,4 +16,12 @@ export class UserService {
       {username, password}
     );
   }
+
+  managerLogin(username: string, password: string): Observable <Token>{
+    return this.http.post<Token>(
+      `${this.apiUrl}/manager/login/`,
+      {username, password}
+    );
+  }
+
 }

@@ -1,1 +1,17 @@
-<p>wishlist works!</p>
+<app-navbar></app-navbar>
+<div *ngIf="wishlist">
+    <div *ngFor="let product of wishlist.products">
+        <h1>name:{{product.name}}</h1>
+        <h2>description:{{product.description}}</h2>
+        <h2>price:{{product.price}}</h2>
+        <h2>{{product.category_id}}</h2>
+        <h2><button (click)="deleteProd(product.id)">delete</button></h2>
+
+        <br>
+    <br>
+    </div>
+
+    
+</div>
+
+<router-outlet></router-outlet>
